@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {environment} from "../environments/environment";
 
 @Component({
   selector: 'app-root',
@@ -18,12 +19,33 @@ export class AppComponent implements OnInit {
 
   voiceToText() {
 
+    let headers = new HttpHeaders({
+      'Authorization': 'Bearer ',
+      'Content-Type': 'application/json'
+    });
+
+    let requestData = { 'audio': '', 'config': {
+        'enableAutomaticPunctuation': true,
+        'encoding': "LINEAR16",
+        "languageCode": "fr-FR",
+        "model": "default"
+      }
+    }
+
+    this.http.post<any>('https://speech.googleapis.com/v1p1beta1/speech:recognize', JSON.stringify(requestData),{headers: headers})
+        .subscribe(data => {
+          console.log(data);
+          this.conversation = data.choices[0].message.content;
+          this.textToVoice(this.conversation);
+        });
   }
 
-  textToChatGPT(text) {
-    console.log(text);
+  callChatGPT(text) {
+
+    this.conversation = this.conversation.concat('<br /><b>You</b> : ' + text);
+
     let headers = new HttpHeaders({
-      'Authorization': 'Bearer [your_token]',
+      'Authorization': 'Bearer ' + environment.openAIApiKey,
       'Content-Type': 'application/json'
     });
 
@@ -32,7 +54,8 @@ export class AppComponent implements OnInit {
     this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData),{headers: headers})
         .subscribe(data => {
           console.log(data);
-          this.conversation = data.choices[0].message.content;
+          let htmlResponse = data.choices[0].message.content.replace(/\\n/g, '<br/>')
+          this.conversation = this.conversation.concat('<br /><b>ChatGPT</b> : ' + htmlResponse);
           this.textToVoice(this.conversation);
         });
   }
