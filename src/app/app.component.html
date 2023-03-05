@@ -1,0 +1,11 @@
+<div>
+    <textarea id="conversation" placeholder="ChatGPT responses"></textarea>
+</div>
+<div>{{conversation}}</div>
+<div>
+<!--    <mat-form-field>-->
+        <textarea #text id="text" placeholder="Text sent to ChatGPT"></textarea>
+        <button (click)="textToChatGPT(text.value)" mat-fab color="primary"><span class="material-symbols-outlined">send</span></button>
+        <button mat-fab color="primary"><span class="material-symbols-outlined">mic</span></button>
+<!--    </mat-form-field>-->
+</div>
