@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../environments/environment";
 import { Injectable } from '@angular/core';
 import {VoiceRecognitionService} from "./service/voice-recognition.service";
+import {TextToSpeechService} from "./service/text-to-speech.service";
 
 @Component({
   selector: 'app-root',
@@ -20,15 +21,16 @@ export class AppComponent implements OnInit {
     public voiceRecognitionState = 0;
     public voiceButtonColor = 'primary'
 
-  constructor(private http: HttpClient, public voiceRecognition: VoiceRecognitionService) { }
+  constructor(private http: HttpClient, public voiceRecognition: VoiceRecognitionService, public textToSpeech: TextToSpeechService) { }
 
   ngOnInit(): void {
 
       // microphone authorization
       navigator.mediaDevices.getUserMedia({audio: true});
-      //init recognition system
+      // init recognition system
       this.voiceRecognition.init();
-
+      // init textToSpeech system
+      this.textToSpeech.init();
   }
 
   voiceRecognitionSwitch() {
@@ -58,15 +60,13 @@ export class AppComponent implements OnInit {
 
     this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData),{headers: headers})
         .subscribe(data => {
-          console.log(data);
-          let htmlResponse = data.choices[0].message.content.replace(/\\n/g, '<br/>')
-          this.conversation = this.conversation.concat('<br /><b>ChatGPT</b> : ' + htmlResponse);
-          this.textToVoice(this.conversation);
+            let htmlResponse = data.choices[0].message.content.replace(/\\n/g, '<br/>')
+            this.textToVoice(htmlResponse);
+            this.conversation = this.conversation.concat('<br /><b>ChatGPT</b> : ' + htmlResponse);
         });
   }
 
   textToVoice(text) {
-
+        this.textToSpeech.say(text);
   }
-
 }
