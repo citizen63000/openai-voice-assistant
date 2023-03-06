@@ -1,48 +1,53 @@
 import {Component, OnInit} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {environment} from "../environments/environment";
+import { Injectable } from '@angular/core';
+import {VoiceRecognitionService} from "./service/voice-recognition.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
+
+@Injectable({
+    providedIn: 'root'
+})
+
 export class AppComponent implements OnInit {
 
-  title = 'openai-voice-assistant';
+    public conversation = '';
+    public voiceRecognitionState = 0;
+    public voiceButtonColor = 'primary'
 
-  conversation = '';
+  constructor(private http: HttpClient, public voiceRecognition: VoiceRecognitionService) { }
 
-  constructor(private http: HttpClient) { }
+  ngOnInit(): void {
 
-  ngOnInit(): void {}
+      // microphone authorization
+      navigator.mediaDevices.getUserMedia({audio: true});
+      //init recognition system
+      this.voiceRecognition.init();
 
-  voiceToText() {
+  }
 
-    let headers = new HttpHeaders({
-      'Authorization': 'Bearer ',
-      'Content-Type': 'application/json'
-    });
-
-    let requestData = { 'audio': '', 'config': {
-        'enableAutomaticPunctuation': true,
-        'encoding': "LINEAR16",
-        "languageCode": "fr-FR",
-        "model": "default"
+  voiceRecognitionSwitch() {
+      if (this.voiceRecognitionState == 0) {
+          this.voiceRecognition.start();
+          this.voiceRecognitionState = 1;
+          this.voiceButtonColor = 'warn'
+      } else {
+          this.voiceRecognition.stop();
+          this.voiceRecognitionState = 0;
+          this.voiceButtonColor = 'primary'
+          this.callChatGPT(this.voiceRecognition.text);
+          this.voiceRecognition.text = '';
       }
-    }
-
-    this.http.post<any>('https://speech.googleapis.com/v1p1beta1/speech:recognize', JSON.stringify(requestData),{headers: headers})
-        .subscribe(data => {
-          console.log(data);
-          this.conversation = data.choices[0].message.content;
-          this.textToVoice(this.conversation);
-        });
   }
 
   callChatGPT(text) {
 
-    this.conversation = this.conversation.concat('<br /><b>You</b> : ' + text);
+    this.conversation = this.conversation.concat('<br /><b>Me</b> : ' + text);
 
     let headers = new HttpHeaders({
       'Authorization': 'Bearer ' + environment.openAIApiKey,
