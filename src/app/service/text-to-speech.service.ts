@@ -15,6 +15,9 @@ export class TextToSpeechService {
 
     say(msg) {
         let ut = new SpeechSynthesisUtterance(msg);
+        let voices = this.synth.getVoices();
+        ut.voice = voices[0];
+        ut.lang = 'fr-FR';
         this.synth.speak(ut);
     }
 }

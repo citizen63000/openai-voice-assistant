@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     public conversation = '';
     public voiceRecognitionState = 0;
     public voiceButtonColor = 'primary'
+    private messages = [{'role': 'system', 'content': 'Vous êtes une IA très serviable'}];
 
   constructor(private http: HttpClient, public voiceRecognition: VoiceRecognitionService, public textToSpeech: TextToSpeechService) { }
 
@@ -56,11 +57,15 @@ export class AppComponent implements OnInit {
       'Content-Type': 'application/json'
     });
 
-    let requestData = { 'model': 'gpt-3.5-turbo', 'messages': [{'role': 'user', 'content': text}]}
+    // need to push all the conversation each time to keep the context
+    this.messages.push({'role': 'user', 'content': text});
+    let requestData = { 'model': 'gpt-3.5-turbo', 'messages': this.messages}
 
     this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData),{headers: headers})
         .subscribe(data => {
-            let htmlResponse = data.choices[0].message.content.replace(/\\n/g, '<br/>')
+            let response = data.choices[0].message.content;
+            this.messages.push({'role': 'assistant', 'content': response});
+            let htmlResponse = response.replace(/\\n/g, '<br/>');
             this.textToVoice(htmlResponse);
             this.conversation = this.conversation.concat('<br /><b>ChatGPT</b> : ' + htmlResponse);
         });

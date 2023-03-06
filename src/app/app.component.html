@@ -2,7 +2,7 @@
 <div>
 <!--    <mat-form-field>-->
         <textarea #text id="text" placeholder="Text sent to ChatGPT" style="width: 80%">{{voiceRecognition.tempWords}}{{voiceRecognition.text}}</textarea>
-        <button (click)="callChatGPT(text.value)" mat-fab color="primary"><span class="material-symbols-outlined">send</span></button>
+        <button (click)="callChatGPT(text.value);text.value=''" mat-fab color="primary"><span class="material-symbols-outlined">send</span></button>
         <button (click)="voiceRecognitionSwitch()" mat-fab color="{{this.voiceButtonColor}}"><span class="material-symbols-outlined">mic</span></button>
 <!--    </mat-form-field>-->
 </div>
