@@ -8,31 +8,35 @@ declare var webkitSpeechRecognition: any;
 
 export class VoiceRecognitionService {
 
-  private recognition =  new webkitSpeechRecognition();
+  private recognition;// =  new webkitSpeechRecognition();
   private isStoppedSpeechRecog = false;
   public text = '';
-  private tempWords;
+  public tempWords;
 
   constructor() { }
 
   init() {
 
-    this.recognition.interimResults = true;
-    this.recognition.lang = 'fr-FR';
+    if (!('webkitSpeechRecognition' in window)) {
+      alert('SpeechRecognition not supported by your browser, please use Google Chrome');
+    } else {
+      this.recognition = new webkitSpeechRecognition();
+      this.recognition.interimResults = true;
+      this.recognition.lang = 'fr-FR';
 
-    this.recognition.addEventListener('result', (e) => {
-      const transcript = Array.from(e.results)
-          .map((result) => result[0])
-          .map((result) => result.transcript)
-          .join('');
-      this.tempWords = transcript;
-    });
+      this.recognition.addEventListener('result', (e) => {
+        const transcript = Array.from(e.results)
+            .map((result) => result[0])
+            .map((result) => result.transcript)
+            .join('');
+        this.tempWords = transcript;
+      });
+    }
   }
 
   start() {
     this.isStoppedSpeechRecog = false;
     this.recognition.start();
-    console.log("Speech recognition started")
     this.recognition.addEventListener('end', (condition) => {
       if (this.isStoppedSpeechRecog) {
         this.recognition.stop();
