@@ -74,13 +74,24 @@ export class AppComponent implements OnInit {
 
         this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData), {headers: headers})
             .subscribe(data => {
-                let response = data.choices[0].message.content;
-                this.messages.push({'role': 'assistant', 'content': response});
-                let htmlResponse = response.replace(/\\n/g, '<br/>');
-                this.textToVoice(htmlResponse);
-                this.conversation = this.conversation.concat('<br /><b>ChatGPT</b> : ' + htmlResponse);
+                console.log(data);
+                let response = data.choices[0] ? data.choices[0].message.content : data.message;
+                this.addResponse(response);
+            },
+            error => {
+               console.log(error);
+               this.addResponse(error.message);
             });
+
     }
+
+    addResponse(response: string) {
+        this.messages.push({'role': 'assistant', 'content': response});
+        let htmlResponse = response.replace(/\\n/g, '<br/>');
+        this.textToVoice(htmlResponse);
+        this.conversation = this.conversation.concat('<br /><b>IA</b> : ' + htmlResponse);
+    }
+
 
     textToVoice(text) {
         this.textToSpeech.say(text);
