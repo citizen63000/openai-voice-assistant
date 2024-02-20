@@ -15,11 +15,13 @@ body {
         overflow: hidden;
 }
 .conversation {
-        background-color: #313338;
-        width: 100%;
-        height: calc(100vh - 80px);
-        padding: 5px;
-        flex: 2;
+    background-color: #313338;
+    width: calc(100% - 10px);
+    height: calc(100vh - 80px);
+    padding: 5px;
+    flex: 2;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 .chat-input {
         padding: 5px;
@@ -31,11 +33,19 @@ body {
 }
 
 textarea {
-        background-color: #313338;
-        color: beige;
-        margin: 5px;
-        width: 85%;
-        float: left;
+    background-color: #313338;
+    color: beige;
+    margin: 5px;
+    padding: 1em;
+    width: 85%;
+    float: left;
+    border-radius: 5px;
+    border-color: beige;
+    resize: none;
+    border: 0px;
+}
+textarea:focus, input:focus{
+    outline: none;
 }
 button {
         margin: 2px;

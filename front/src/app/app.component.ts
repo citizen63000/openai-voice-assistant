@@ -71,7 +71,7 @@ export class AppComponent implements OnInit {
         // need to push all the conversation each time to keep the context
         this.messages.push({'role': 'user', 'content': text});
         let requestData = {'model': 'gpt-3.5-turbo', 'messages': this.messages}
-
+/*
         this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData), {headers: headers})
             .subscribe(data => {
                 this.addResponse(data.choices[0].message.content);
@@ -80,7 +80,7 @@ export class AppComponent implements OnInit {
                console.log(error);
                this.addResponse(error.message);
             });
-
+*/
     }
 
     addResponse(response: string) {
