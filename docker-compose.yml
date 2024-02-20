@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  assistant-front:
+    build: front/docker
+    container_name: assistant-front
+    ports:
+      - 8090:8080
+      - 4200:4200
+    volumes:
+      - ./front:/var/www/app
+      - ./front/docker/ports.conf:/etc/apache2/ports.conf
+    networks:
+      - assistant-local
+networks:
+  assistant-local:

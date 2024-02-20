@@ -44,7 +44,7 @@ export class AppComponent implements OnInit {
             this.voiceRecognition.stop();
             this.voiceRecognitionState = 0;
             this.voiceButtonColor = 'primary'
-            this.callChatGPT(this.voiceRecognition.text);
+            this.callIA(this.voiceRecognition.text);
             this.voiceRecognition.text = '';
             this.voiceRecognition.tempWords = '';
         }
@@ -59,7 +59,7 @@ export class AppComponent implements OnInit {
      * https://platform.openai.com/docs/guides/chat/introduction
      * @param text
      */
-    callChatGPT(text) {
+    callIA(text) {
 
         this.conversation = this.conversation.concat('<br /><b>Me</b> : ' + text);
 
