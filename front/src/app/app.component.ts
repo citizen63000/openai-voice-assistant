@@ -74,9 +74,7 @@ export class AppComponent implements OnInit {
 
         this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData), {headers: headers})
             .subscribe(data => {
-                console.log(data);
-                let response = data.choices[0] ? data.choices[0].message.content : data.message;
-                this.addResponse(response);
+                this.addResponse(data.choices[0].message.content);
             },
             error => {
                console.log(error);
