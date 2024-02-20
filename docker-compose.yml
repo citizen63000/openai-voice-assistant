@@ -1,7 +1,8 @@
 version: "3.3"
 services:
   assistant-front:
-    build: front/docker
+    #build: front/docker
+    image: citizen63000/npm-apache
     container_name: assistant-front
     ports:
       - 8090:8080
