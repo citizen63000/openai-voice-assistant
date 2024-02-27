@@ -50,11 +50,6 @@ export class AppComponent implements OnInit {
         }
     }
 
-    sendText(text) {
-        // this.text.value='';
-
-    }
-
     /**
      * https://platform.openai.com/docs/guides/chat/introduction
      * @param text
@@ -63,14 +58,15 @@ export class AppComponent implements OnInit {
 
         this.conversation = this.conversation.concat('<br /><b>Me</b> : ' + text);
 
+        // text sample
+
         let headers = new HttpHeaders({
-            'Authorization': 'Bearer ' + environment.openAIApiKey,
-            'Content-Type': 'application/json'
+          // todo à complèter
         });
 
         // need to push all the conversation each time to keep the context
         this.messages.push({'role': 'user', 'content': text});
-        let requestData = {'model': 'gpt-3.5-turbo', 'messages': this.messages}
+        let requestData = '' // todo à complèter
 /*
         this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData), {headers: headers})
             .subscribe(data => {
@@ -81,15 +77,40 @@ export class AppComponent implements OnInit {
                this.addResponse(error.message);
             });
 */
+
+      // image sample
+/*
+      let headers = new HttpHeaders({
+        // todo à complèter
+      });
+
+      // need to push all the conversation each time to keep the context
+      this.messages.push({'role': 'user', 'content': text});
+      let requestData = '' // todo à complèter
+
+        this.http.post<any>('', JSON.stringify(requestData), {headers: headers, observe: 'response', responseType: 'blob' as 'json'})
+          .subscribe(data => {
+              this.addResponse('<img src="'+URL.createObjectURL(data.body)+'" />', false);
+            },
+            error => {
+              console.log(error);
+              this.addResponse(error.message);
+            });
+*/
     }
 
-    addResponse(response: string) {
+    addResponse(response: string, toVoice: boolean = true) {
         this.messages.push({'role': 'assistant', 'content': response});
         let htmlResponse = response.replace(/\\n/g, '<br/>');
-        this.textToVoice(htmlResponse);
+        if (toVoice) {
+          this.textToVoice(htmlResponse);
+        }
         this.conversation = this.conversation.concat('<br /><b>IA</b> : ' + htmlResponse);
     }
 
+    addImage(blob: Blob) {
+      this.addResponse('<img src="'+URL.createObjectURL(blob)+'" />', false);
+    }
 
     textToVoice(text) {
         this.textToSpeech.say(text);
