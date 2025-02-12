@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  openAIApiKey: 'your_key',
+  apiKey: 'your_key',
 };
 
 /*
