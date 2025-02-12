@@ -12,5 +12,12 @@ services:
       - ./front/docker/ports.conf:/etc/apache2/ports.conf
     networks:
       - assistant-local
+  assistant-ollama:
+    image: ollama/ollama:latest
+    container_name: assistant-ollama
+    ports:
+      - 11434:11434
+    networks:
+      - assistant-local
 networks:
   assistant-local:

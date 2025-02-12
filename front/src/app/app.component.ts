@@ -51,7 +51,8 @@ export class AppComponent implements OnInit {
     }
 
     /**
-     * https://platform.openai.com/docs/guides/chat/introduction
+     * https://huggingface.co/mistralai/Mistral-Small-24B-Instruct-2501?inference_api=true&inference_provider=together&language=curl
+     * https://huggingface.co/stabilityai/stable-diffusion-3.5-large?inference_api=true&inference_provider=hf-inference&language=curl
      * @param text
      */
     callIA(text) {
@@ -61,14 +62,14 @@ export class AppComponent implements OnInit {
         // text sample
 
         let headers = new HttpHeaders({
-          // todo à complèter
+          // @todo à complèter, vous pouvez récupérez votre clé renseignée dans environments/environment.ts avec environment.apiKey
         });
 
         // need to push all the conversation each time to keep the context
         this.messages.push({'role': 'user', 'content': text});
         let requestData = '' // todo à complèter
-/*
-        this.http.post<any>('https://api.openai.com/v1/chat/completions', JSON.stringify(requestData), {headers: headers})
+
+        this.http.post<any>('URL ICI', JSON.stringify(requestData), {headers: headers})
             .subscribe(data => {
                 this.addResponse(data.choices[0].message.content);
             },
@@ -76,7 +77,7 @@ export class AppComponent implements OnInit {
                console.log(error);
                this.addResponse(error.message);
             });
-*/
+
 
       // image sample
 /*
